@@ -1,0 +1,9 @@
+{
+    "scripts": {
+        "start": "node -r esm solve.js"
+    },
+    "dependencies": {
+        "chalk": "^2.4.2",
+        "esm": "^3.2.22"
+    }
+}
