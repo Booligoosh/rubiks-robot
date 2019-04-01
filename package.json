@@ -1,9 +1,11 @@
 {
     "scripts": {
-        "start": "node -r esm solve.js"
+        "start": "node -r esm solve.js",
+        "detect": "node -r esm cube-detection.js"
     },
     "dependencies": {
         "chalk": "^2.4.2",
-        "esm": "^3.2.22"
+        "esm": "^3.2.22",
+        "opencv4nodejs": "^4.14.1"
     }
 }

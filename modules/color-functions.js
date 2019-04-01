@@ -12,3 +12,7 @@ export function incrementColor (color, increment) {
 export function isOddColor (color) {
     return color % 2 != 0;
 }
+
+export function getNameForColor (color) {
+    return ['White', 'Green', 'Red', 'Yellow', 'Blue', 'Orange'][color];
+}
