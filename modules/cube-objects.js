@@ -101,32 +101,12 @@ export class Cube {
         let parts = alg.split(' ')
         for(let part of parts) {
             let direction = part.length == 2 ? COUNTER_CLOCKWISE : CLOCKWISE;
+            let repetitions = part.length == 2 && part[1] == '2' ? 2 : 1;
             let faceLetter = part[0];
             let faceId = this.getFaceIdFromLetter(faceLetter, 1);
-            /*switch (faceLetter) {
-                case 'U':
-                    faceId = 0;
-                    break;
-                case 'F':
-                    faceId = 1;
-                    break;
-                case 'R':
-                    faceId = 2;
-                    break;
-                case 'D':
-                    faceId = 3;
-                    break;
-                case 'B':
-                    faceId = 4;
-                    break;
-                case 'L':
-                    faceId = 5;
-                    break;
-            }*/
-            if (part[1] == '2') {
+            for(let i = 0; i < repetitions; i++) {
                 this.getFaceById(faceId).turn(direction);
             }
-            this.getFaceById(faceId).turn(direction);
         }
     }
     
