@@ -103,17 +103,17 @@ export class Cube {
             let direction = part.length == 2 ? COUNTER_CLOCKWISE : CLOCKWISE;
             let repetitions = part.length == 2 && part[1] == '2' ? 2 : 1;
             let faceLetter = part[0];
-            let faceId = this.getFaceIdFromLetter(faceLetter, 1);
+            let faceId = this.getFaceIdFromLetter(faceLetter, 0);
             for(let i = 0; i < repetitions; i++) {
                 this.getFaceById(faceId).turn(direction);
             }
         }
     }
     
-    getFaceIdFromLetter (letter, frontId) {
+    getFaceIdFromLetter (letter, topFaceId) {
         // TODO: Add letter => id maps all orientations 
         let table = {
-            1: {
+            0: {
                 'U': 0,
                 'F': 1,
                 'R': 2,
@@ -122,7 +122,7 @@ export class Cube {
                 'L': 5,
             }
         };
-        return table[frontId][letter];
+        return table[topFaceId][letter];
     }
 }
 
