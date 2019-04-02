@@ -19,6 +19,9 @@ export class Cube {
             }]));
         }
         
+        this.recordingTurnHistory = true;
+        this.turnHistory = [];
+        
         let faceBorders = [];
         for(let color1 of COLORS) {
             for(let color2 of COLORS) {
@@ -124,6 +127,21 @@ export class Cube {
         };
         return table[topFaceId][letter];
     }
+    
+    scramble () {
+        // Scramble 3 from worldcubeassociation.org/regulations/history/files/scrambles/scramble_cube.htm
+        this.recordingTurnHistory = false;
+        this.executeAlgorithmFromString(`D2 F' D F L B2 L R2 D' U F R F U' L' B L2 F2 L' B F2 D U2 F2 L' U2 B' F L R'`);
+        this.recordingTurnHistory = true;
+    }
+    
+    getTurnHistory () {
+        return this.turnHistory;
+    }
+    
+    getTurnHistoryAsString () {
+        return this.getTurnHistory().map(turn => ['U','F','R','D','B','L'][turn.face.getId()] + (turn.direction == COUNTER_CLOCKWISE ? `'` : ``)).join(' ');
+    }
 }
 
 export class Face {
@@ -167,6 +185,11 @@ export class Face {
     }
     
     turn (direction) {
+        
+        if(this.parent.recordingTurnHistory) {
+            this.parent.turnHistory.push({face: this, direction: direction});
+        }
+        
         if(isOddColor(this.id)) {
             direction = direction == CLOCKWISE ? COUNTER_CLOCKWISE : CLOCKWISE;
         }
@@ -209,6 +232,10 @@ export class Piece {
     
     getType () {
         return this.type;
+    }
+    
+    hasColor (color) {
+        return this.getTiles().filter(tile => tile.getColor() == color).length > 0;
     }
 }
 
