@@ -1,14 +1,14 @@
 import { WHITE, YELLOW, RED, ORANGE, BLUE, GREEN, COLORS, CLOCKWISE, COUNTER_CLOCKWISE, FACE_COUNT, PIECES_PER_FACE, CORNER_PIECE, EDGE_PIECE, CENTER_PIECE, SCRAMBLE_TEST_SET_1, SCRAMBLE_TEST_SET_2, SCRAMBLE_TEST_SET_3, SCRAMBLE_TEST_SET_4, SCRAMBLE_TEST_SET_5 } from './modules/constants'
-import {Cube, Piece} from './modules/cube-objects'
+import {Cube, Piece, Tile} from './modules/cube-objects'
 import {getOppositeColor, getNameForColor} from './modules/color-functions'
 import {getScrambleSets} from './modules/scramble-sets'
 import chalk from 'chalk'
 
-function getPiecesInCross (crossEdgePieces, crossColor): Piece[] {
+function getPiecesInCross (crossEdgePieces: Piece[], crossColor: number): Piece[] {
     return crossEdgePieces.filter(piece => piece.getTileWithColor(crossColor).getFace().getId() === crossColor)
 }
 
-function crossIsSolved (cube, crossColor): boolean {
+function crossIsSolved (cube: Cube, crossColor: number): boolean {
     let isSolved = true
     const crossEdgePieces = cube.getPieces().filter(piece => piece.getType() === EDGE_PIECE && piece.hasColor(crossColor))
     const piecesInCross = getPiecesInCross(crossEdgePieces, crossColor)
@@ -26,18 +26,18 @@ function crossIsSolved (cube, crossColor): boolean {
     return isSolved
 }
 
-function crossColorShouldBeOnRightOfOtherCrossColor (crossColor1, crossColor2): boolean {
+function crossColorShouldBeOnRightOfOtherCrossColor (crossColor1: number, crossColor2: number): boolean {
     return (crossColor1 === GREEN && crossColor2 === RED) ||
         (crossColor1 === RED && crossColor2 === BLUE) ||
         (crossColor1 === BLUE && crossColor2 === ORANGE) ||
         (crossColor1 === ORANGE && crossColor2 === GREEN)
 }
 
-function crossPieceIsOnRightOfOtherCrossPiece (crossPiece1, crossPiece2, crossColor): boolean {
+function crossPieceIsOnRightOfOtherCrossPiece (crossPiece1: Piece, crossPiece2: Piece, crossColor: number): boolean {
     return crossColorShouldBeOnRightOfOtherCrossColor(crossPiece1.getTileWithoutColor(crossColor).getFace().getId(), crossPiece2.getTileWithoutColor(crossColor).getFace().getId())
 }
 
-function rotateCrossFaceSoColorCanBeInserted (cube, crossTile, nonCrossTile, crossEdgePieces, crossColor, piecesOfficiallyInCross): void {
+function rotateCrossFaceSoColorCanBeInserted (cube: Cube, crossTile: Tile, nonCrossTile: Tile, crossEdgePieces: Piece[], crossColor: number, piecesOfficiallyInCross: Piece[]): void {
 
     if (piecesOfficiallyInCross.length === 0) {
         // No pieces in cross so no need to rotate
@@ -85,13 +85,13 @@ function rotateCrossFaceSoColorCanBeInserted (cube, crossTile, nonCrossTile, cro
     }
 }
 
-function rotateFaceUntilOntop (crossTile, nonCrossTile, crossEdgePieces, crossColor): void {
+function rotateFaceUntilOntop (crossTile: Tile, nonCrossTile: Tile, crossEdgePieces: Piece[], crossColor: number): void {
     while (crossTile.getFace().getId() !== crossColor) {
         nonCrossTile.getFace().turn(CLOCKWISE)
     }
 }
 
-function solveCross (cube, crossColor): void {
+function solveCross (cube: Cube, crossColor: number): void {
 
     let crossEdgePieces = cube.getPieces().filter(piece => piece.getType() === EDGE_PIECE && piece.hasColor(crossColor))
     crossEdgePieces = crossEdgePieces.sort((piece1, piece2) => {
