@@ -1,4 +1,4 @@
-import {WHITE, YELLOW, RED, ORANGE, BLUE, GREEN, COLORS, CLOCKWISE, COUNTER_CLOCKWISE, FACE_COUNT, PIECES_PER_FACE, CORNER_PIECE, EDGE_PIECE, CENTER_PIECE} from './constants'
+import {COLORS, CLOCKWISE, COUNTER_CLOCKWISE, CORNER_PIECE, EDGE_PIECE, CENTER_PIECE} from './constants'
 
 import { getOppositeColor, incrementColor, isOddColor, getLetterForColor, getTerminalColorFunction } from './color-functions'
 
