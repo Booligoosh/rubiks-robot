@@ -32,7 +32,6 @@ module.exports = {
             "error",
             "always"
         ],
-        "no-magic-numbers": "warn",
         "no-script-url": "error",
         "eqeqeq": "error",
         "no-unused-vars": "off"
