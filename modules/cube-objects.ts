@@ -6,81 +6,111 @@ import { removeDuplicates, removeDuplicateArrays } from './array-functions'
 
 import chalk from 'chalk'
 
+class Turn {
+    face: Face
+    direction: number
 
-export class Face {
-    id: number
-    parent: Cube
+    constructor (face: Face, direction: number) {
+        this.face = face
+        this.direction = direction
+    }
 
-    constructor (parent: Cube, id: number) {
-        // The ID is the same as the color number of its center piece
-        this.id = Number(id)
+    getFace (): Face {
+        return this.face
+    }
+
+    getDirection (): number {
+        return this.direction
+    }
+}
+export class Tile {
+    parent: Piece
+    color: number
+    face: Face
+
+    constructor (parent: Piece, color: number, face: Face) {
         this.parent = parent
+        this.color = color
+        this.face = face
     }
-    
-    getId (): number {
-        return this.id
+
+    getColor (): number {
+        return this.color
     }
-    
-    getPieces (): Piece[] {
-        return this.parent.pieces.filter(piece => piece.getTiles().filter(tile => tile.getFace() === this).length > 0)
+
+    getFace (): Face {
+        return this.face
     }
-    
-    getTiles (): Tile[] {
-        return this.getPieces().map(piece => piece.getTiles().filter(tile => tile.getFace() === this)[0])
+
+    setFace (face: Face): void {
+        this.face = face
     }
-    
-    getPositionedTiles (): Tile[] {
-        const positionedTiles = new Array(9)
-        
-        for(const tile of this.getTiles()) {
-            //console.log('TILE FOR FACE', face.id, tile.getPositionOnFace());
-            positionedTiles[tile.getPositionOnFace()] = tile
-        }
-        
-        return positionedTiles
+
+    getParentPiece (): Piece {
+        return this.parent
     }
-    
-    getOppositeFace (): Face {
-        return this.parent.faces[getOppositeColor(this.id)]
+
+    getOtherTilesOnPiece (): Tile[] {
+        return this.getParentPiece().getTiles().filter(tile => tile !== this)
     }
-    
-    getTileAtPosition (position: number): Tile {
-        const tiles = this.getTiles()
-        const toReturn = tiles.find(tile => tile.getPositionOnFace() === position)
-        return typeof toReturn === `undefined` ? null : toReturn
-    }
-    
-    turn (direction: number): void {
-        
-        if(this.parent.recordingTurnHistory) {
-            this.parent.turnHistory.push(new Turn(this, direction))
-        }
-        
-        if(isOddColor(this.id)) {
-            direction = direction === CLOCKWISE ? COUNTER_CLOCKWISE : CLOCKWISE
-        }
-        const tilesOnFace = this.getTiles()
-        for(const tile of tilesOnFace) {
-            const piece = tile.getParentPiece()
-            const otherTilesOnPiece = tile.getOtherTilesOnPiece()
-            /*console.log('Tile face:', tile.getFace().id);
-            console.log('Tile color:', tile.getColor());
-            console.log('Tile position on face:', tile.getPositionOnFace());
-            console.log('Other tiles on piece:', otherTilesOnPiece.map(t=>t.face.id));
-            console.log('Other colors on piece:', otherTilesOnPiece.map(t=>t.color));*/
-            for(const otherTile of otherTilesOnPiece) {
-                
-                //console.log(otherTile.getPositionOnFace(), otherTile);
-                
-                const increment = (direction === CLOCKWISE ? -1 : 1)
-                
-                otherTile.face = this.parent.getFaceById(incrementColor(otherTile.face.id, increment))
-                
-                if(otherTile.face.id === this.id || otherTile.face.id === getOppositeColor(this.id)) {
-                    otherTile.face = this.parent.getFaceById(incrementColor(otherTile.face.id, increment))
+
+    getPositionOnFace (): number {
+        const cube = this.parent.parent
+        const piece = this.getParentPiece()
+
+        const surroundingFaces = COLORS.filter(color => color !== this.face.getId() && color !== getOppositeColor(this.face.getId())).map(id => cube.getFaceById(id))
+
+        const otherTilesOnPiece = this.getOtherTilesOnPiece()
+        const otherFacesOnPiece = otherTilesOnPiece.map(tile => tile.face.id)
+
+        /*console.log('---');
+        console.log('Face color:', this.face.getId());
+        console.log('Tile color:', this.color);
+        console.log('Piece type:', piece.getType());
+        console.log('Other faces on piece:', otherFacesOnPiece);
+        console.log('Surrounding faces: ', surroundingFaces.map(f=>f.id));*/
+
+        const faceIsEven = !isOddColor(this.face.getId())
+
+        if (piece.getType() === CENTER_PIECE) {
+            return 4
+        } else if (piece.getType() === EDGE_PIECE) {
+            if (otherFacesOnPiece.includes(incrementColor(this.face.getId(), 1))) {
+                // On top edge
+                return 1
+            }
+            if (otherFacesOnPiece.includes(incrementColor(this.face.getId(), 2))) {
+                // On right/left (when even) edge
+                return faceIsEven ? 3 : 5
+            }
+            if (otherFacesOnPiece.includes(incrementColor(this.face.getId(), 4))) {
+                // On bottom edge
+                return 7
+            }
+            if (otherFacesOnPiece.includes(incrementColor(this.face.getId(), 5))) {
+                // On left/right (when even) edge
+                return faceIsEven ? 5 : 3
+            }
+        } else if (piece.getType() === CORNER_PIECE) {
+            if (otherFacesOnPiece.includes(incrementColor(this.face.getId(), 1))) {
+                // On top edge // Either 0 or 2 //
+                if (otherFacesOnPiece.includes(incrementColor(this.face.getId(), 2))) {
+                    // On right/left (when even) edge
+                    return faceIsEven ? 0 : 2
+                } else {
+                    // On left/right (when even) edge
+                    return faceIsEven ? 2 : 0
                 }
-                
-                //console.log('Face changed to:', otherTile.face.id, otherTile.getPositionOnFace());
+            }
+            if (otherFacesOnPiece.includes(incrementColor(this.face.getId(), 4))) {
+                // On bottom edge // Either 6 or 8 //
+                if (otherFacesOnPiece.includes(incrementColor(this.face.getId(), 5))) {
+                    // On right/left (when even) edge
+                    return faceIsEven ? 8 : 6
+                } else {
+                    // On left/right (when even) edge
+                    return faceIsEven ? 6 : 8
+                }
             }
         }
     }
@@ -151,116 +181,85 @@ export class CenterPiece extends Piece {
     }
 }
 
-export class Tile {
-    parent: Piece
-    color: number
-    face: Face
+export class Face {
+    id: number
+    parent: Cube
 
-    constructor (parent: Piece, color: number, face: Face) {
+    constructor (parent: Cube, id: number) {
+        // The ID is the same as the color number of its center piece
+        this.id = Number(id)
         this.parent = parent
-        this.color = color
-        this.face = face
     }
-    
-    getColor (): number {
-        return this.color
+
+    getId (): number {
+        return this.id
     }
-    
-    getFace (): Face {
-        return this.face
+
+    getPieces (): Piece[] {
+        return this.parent.pieces.filter(piece => piece.getTiles().filter(tile => tile.getFace() === this).length > 0)
     }
-    
-    setFace (face: Face): void {
-        this.face = face
+
+    getTiles (): Tile[] {
+        return this.getPieces().map(piece => piece.getTiles().filter(tile => tile.getFace() === this)[0])
     }
-    
-    getParentPiece (): Piece {
-        return this.parent
+
+    getPositionedTiles (): Tile[] {
+        const positionedTiles = new Array(9)
+
+        for (const tile of this.getTiles()) {
+            //console.log('TILE FOR FACE', face.id, tile.getPositionOnFace());
+            positionedTiles[tile.getPositionOnFace()] = tile
+        }
+
+        return positionedTiles
     }
-    
-    getOtherTilesOnPiece (): Tile[] {
-        return this.getParentPiece().getTiles().filter(tile => tile !== this)
+
+    getOppositeFace (): Face {
+        return this.parent.faces[getOppositeColor(this.id)]
     }
-    
-    getPositionOnFace (): number {
-        const cube = this.parent.parent
-        const piece = this.getParentPiece()
-        
-        const surroundingFaces = COLORS.filter(color => color !== this.face.getId() && color !== getOppositeColor(this.face.getId())).map(id => cube.getFaceById(id))
-        
-        const otherTilesOnPiece = this.getOtherTilesOnPiece()
-        const otherFacesOnPiece = otherTilesOnPiece.map(tile => tile.face.id)
-        
-        /*console.log('---');
-        console.log('Face color:', this.face.getId());
-        console.log('Tile color:', this.color);
-        console.log('Piece type:', piece.getType());
-        console.log('Other faces on piece:', otherFacesOnPiece);
-        console.log('Surrounding faces: ', surroundingFaces.map(f=>f.id));*/
-        
-        const faceIsEven = !isOddColor(this.face.getId())
-        
-        if(piece.getType() === CENTER_PIECE) {
-            return 4
-        } else if (piece.getType() === EDGE_PIECE) {
-            if(otherFacesOnPiece.includes(incrementColor(this.face.getId(), 1))) {
-                // On top edge
-                return 1
-            }
-            if(otherFacesOnPiece.includes(incrementColor(this.face.getId(), 2))) {
-                // On right/left (when even) edge
-                return faceIsEven ? 3 : 5
-            }
-            if(otherFacesOnPiece.includes(incrementColor(this.face.getId(), 4))) {
-                // On bottom edge
-                return 7
-            }
-            if(otherFacesOnPiece.includes(incrementColor(this.face.getId(), 5))) {
-                // On left/right (when even) edge
-                return faceIsEven ? 5 : 3
-            }
-        } else if (piece.getType() === CORNER_PIECE) {
-            if(otherFacesOnPiece.includes(incrementColor(this.face.getId(), 1))) {
-                // On top edge // Either 0 or 2 //
-                if(otherFacesOnPiece.includes(incrementColor(this.face.getId(), 2))) {
-                    // On right/left (when even) edge
-                    return faceIsEven ? 0 : 2
-                } else {
-                    // On left/right (when even) edge
-                    return faceIsEven ? 2 : 0
+
+    getTileAtPosition (position: number): Tile {
+        const tiles = this.getTiles()
+        const toReturn = tiles.find(tile => tile.getPositionOnFace() === position)
+        return typeof toReturn === `undefined` ? null : toReturn
+    }
+
+    turn (direction: number): void {
+
+        if (this.parent.recordingTurnHistory) {
+            this.parent.turnHistory.push(new Turn(this, direction))
+        }
+
+        if (isOddColor(this.id)) {
+            direction = direction === CLOCKWISE ? COUNTER_CLOCKWISE : CLOCKWISE
+        }
+        const tilesOnFace = this.getTiles()
+        for (const tile of tilesOnFace) {
+            const piece = tile.getParentPiece()
+            const otherTilesOnPiece = tile.getOtherTilesOnPiece()
+            /*console.log('Tile face:', tile.getFace().id);
+            console.log('Tile color:', tile.getColor());
+            console.log('Tile position on face:', tile.getPositionOnFace());
+            console.log('Other tiles on piece:', otherTilesOnPiece.map(t=>t.face.id));
+            console.log('Other colors on piece:', otherTilesOnPiece.map(t=>t.color));*/
+            for (const otherTile of otherTilesOnPiece) {
+
+                //console.log(otherTile.getPositionOnFace(), otherTile);
+
+                const increment = (direction === CLOCKWISE ? -1 : 1)
+
+                otherTile.face = this.parent.getFaceById(incrementColor(otherTile.face.id, increment))
+
+                if (otherTile.face.id === this.id || otherTile.face.id === getOppositeColor(this.id)) {
+                    otherTile.face = this.parent.getFaceById(incrementColor(otherTile.face.id, increment))
                 }
-            }
-            if(otherFacesOnPiece.includes(incrementColor(this.face.getId(), 4))) {
-                // On bottom edge // Either 6 or 8 //
-                if(otherFacesOnPiece.includes(incrementColor(this.face.getId(), 5))) {
-                    // On right/left (when even) edge
-                    return faceIsEven ? 8 : 6
-                } else {
-                    // On left/right (when even) edge
-                    return faceIsEven ? 6 : 8
-                }
+
+                //console.log('Face changed to:', otherTile.face.id, otherTile.getPositionOnFace());
             }
         }
     }
 }
 
-class Turn {
-    face: Face
-    direction: number
-
-    constructor (face: Face, direction: number) {
-        this.face = face
-        this.direction = direction
-    }
-
-    getFace (): Face {
-        return this.face
-    }
-
-    getDirection (): number {
-        return this.direction
-    }
-}
 export class Cube {
     faces: Face[]
     pieces: Piece[]
@@ -354,7 +353,7 @@ export class Cube {
     }
 
     // getPieceWithFaces (): Piece {
-        // To-do
+    // To-do
     // }
 
     executeAlgorithmFromString (alg: string): void {
