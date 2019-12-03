@@ -1,8 +1,8 @@
 import {WHITE, YELLOW, RED, ORANGE, BLUE, GREEN, COLORS, CLOCKWISE, COUNTER_CLOCKWISE, FACE_COUNT, PIECES_PER_FACE, CORNER_PIECE, EDGE_PIECE, CENTER_PIECE} from './constants.js';
 
-import {getOppositeColor, incrementColor, isOddColor} from './color-functions.js';
+import { getOppositeColor, incrementColor, isOddColor, getLetterForColor, getTerminalColorFunction } from './color-functions.js';
 
-import {removeDuplicates, removeDuplicateArrays} from './array-functions.js';
+import { removeDuplicates, removeDuplicateArrays } from './array-functions.js';
 
 import chalk from 'chalk';
 
@@ -192,6 +192,32 @@ export class Cube {
         if (!silent) {
             console.log(`Removed ${originalLength - turnHistory.length} moves by simplification.`);
         }
+    }
+
+    print (useLetters = false) {
+        const divider = `\n-------------`;
+        let toPrint = ``;
+
+        for (let face of this.getFaces()) {
+            toPrint += '\n';
+            let tiles = face.getPositionedTiles();
+
+            for (let i = 0; i < tiles.length; i++) {
+                let tile = tiles[i];
+                let color = typeof tile == 'undefined' ? ' ' : tile.color;
+                if (i == 0 || i == 3 || i == 6) {
+                    toPrint += divider;
+                    toPrint += `\n|`;
+                }
+                toPrint += ` ${getTerminalColorFunction(color)(useLetters ? getLetterForColor(color) : color)} |`
+                if (i == 8) {
+                    toPrint += divider;
+                }
+            }
+        }
+        toPrint += `\n`;
+
+        console.log(toPrint);
     }
 }
 
