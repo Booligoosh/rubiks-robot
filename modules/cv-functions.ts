@@ -1,4 +1,4 @@
-import {WHITE, GREEN, RED, YELLOW, BLUE, ORANGE, COLORS} from './constants'
+import {WHITE, GREEN, RED, YELLOW, BLUE, ORANGE} from './constants'
 import * as cv from 'opencv4nodejs'
 
 export function getMaskRangesForColor (color: number): Range[] {
@@ -47,11 +47,11 @@ export function getMaskRangesForColor (color: number): Range[] {
     return table[color]
 }
 
-export function getImageMaskForRange (image, lower: number[], upper: number[]) {
+export function getImageMaskForRange (image: cv.Mat, lower: number[], upper: number[]): cv.Mat {
     return image.inRange(new cv.Vec3(lower[0], lower[1], lower[2]), new cv.Vec3(upper[0], upper[1], upper[2]))
 }
 
-export function getImageMaskForRanges (image, ranges: Range[]) {
+export function getImageMaskForRanges (image: cv.Mat, ranges: Range[]): cv.Mat {
     // Ranges looks like this: [ { lower: [1,2,3], upper: [1,2,3] } ]
     let mask = null
     for (const range of ranges) {
@@ -65,11 +65,11 @@ export function getImageMaskForRanges (image, ranges: Range[]) {
     return mask
 }
 
-export function getImageMaskForColor (image, color: number) {
+export function getImageMaskForColor (image: cv.Mat, color: number): cv.Mat {
     return getImageMaskForRanges(image, getMaskRangesForColor(color))
 }
 
-export function multiChannelApplyMask (img, mask) {
+export function multiChannelApplyMask (img: cv.Mat, mask): cv.Mat {
     const channels = img.splitChannels()
     const maskedChannels = channels.map(c => c.bitwiseAnd(mask))
     const output = new cv.Mat(maskedChannels)

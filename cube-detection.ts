@@ -12,9 +12,9 @@ async function readCube (): Promise<void> {
     //await sleep(1000); // https://stackoverflow.com/q/28566972/
 
     //let frame = cap.read();
-    const frame = cv.imread(`./cube-test.jpg`)
+    const frame: cv.Mat = cv.imread(`./cube-test.jpg`)
     // Converts image from BGR to HSV
-    const hsv = frame.cvtColor(cv.COLOR_BGR2HSV)
+    const hsv: cv.Mat = frame.cvtColor(cv.COLOR_BGR2HSV)
     
     cv.imshowWait(`original`, frame)
     
