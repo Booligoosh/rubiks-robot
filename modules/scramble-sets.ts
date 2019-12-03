@@ -1,16 +1,6 @@
 import {SCRAMBLE_TEST_SET_1, SCRAMBLE_TEST_SET_2, SCRAMBLE_TEST_SET_3, SCRAMBLE_TEST_SET_4, SCRAMBLE_TEST_SET_5} from './constants'
 
-export function getScrambleSets (setNamesArray) {
-    const scrambles = []
-
-    for (const setName of setNamesArray) {
-        populateScrambles(scrambles, setName)
-    }
-    
-    return scrambles
-}
-
-function populateScrambles (scrambles, setName) {
+function populateScrambles (scrambles, setName): void {
 
     switch (setName) {
             
@@ -692,4 +682,14 @@ function populateScrambles (scrambles, setName) {
     default:
         console.log(`*** populateScrambles - unknown setName:`, setName)
     }
+}
+
+export function getScrambleSets (setNamesArray): string[] {
+    const scrambles = []
+
+    for (const setName of setNamesArray) {
+        populateScrambles(scrambles, setName)
+    }
+
+    return scrambles
 }
