@@ -62,7 +62,7 @@ console.log(chalk.yellow(`AVERAGE MOVE COUNT: ${movesCountsSum/moveCounts.length
 
 function solveCross (cube, crossColor) {
 
-    let crossEdgePieces = cube.getPieces().filter(piece => piece.getType() == EDGE_PIECE && piece.hasColor(crossColor))
+    let crossEdgePieces = cube.getPieces().filter(piece => piece.getType() === EDGE_PIECE && piece.hasColor(crossColor))
     crossEdgePieces = crossEdgePieces.sort((piece1, piece2) => {
         if (piece1.getTileWithoutColor(crossColor).getFace().getId() !== crossColor && piece1.getTileWithoutColor(crossColor).getFace().getId() !== getOppositeColor(crossColor)) {
             return -1
@@ -100,7 +100,7 @@ function solveCross (cube, crossColor) {
                         const shouldBeOnRight = crossColorShouldBeOnRightOfOtherCrossColor(referencePiece.getTileWithoutColor(crossColor).getColor(), nonCrossTile.getColor())
                         const isOnRight = crossPieceIsOnRightOfOtherCrossPiece(referencePiece, piece, crossColor)
                         console.log(piece.getTileWithoutColor(crossColor).getColor(), referencePiece.getTileWithoutColor(crossColor).getColor(), {shouldBeOnRight, isOnRight})
-                        if (shouldBeOnRight == isOnRight) {
+                        if (shouldBeOnRight === isOnRight) {
                             isCorrect = true
                         }
                     }
@@ -110,7 +110,7 @@ function solveCross (cube, crossColor) {
         }
         console.log(piecesOfficiallyInCross.map(piece => piece.getTileWithoutColor(crossColor).getColor()))
 
-        if (crossTile.getFace().getId() == crossColor) {
+        if (crossTile.getFace().getId() === crossColor) {
             // Already in cross
             console.log(`Already in cross`)
             if (piecesOfficiallyInCross.filter(p => p !== piece).length > 0) {
@@ -222,10 +222,10 @@ function rotateCrossFaceSoColorCanBeInserted (cube, crossTile, nonCrossTile, cro
 }
 
 function crossColorShouldBeOnRightOfOtherCrossColor (crossColor1, crossColor2) {
-    return (crossColor1 == GREEN && crossColor2 == RED) ||
-    (crossColor1 == RED && crossColor2 == BLUE) ||
-    (crossColor1 == BLUE && crossColor2 == ORANGE) ||
-    (crossColor1 == ORANGE && crossColor2 == GREEN)
+    return (crossColor1 === GREEN && crossColor2 === RED) ||
+    (crossColor1 === RED && crossColor2 === BLUE) ||
+    (crossColor1 === BLUE && crossColor2 === ORANGE) ||
+    (crossColor1 === ORANGE && crossColor2 === GREEN)
 }
 
 function crossPieceIsOnRightOfOtherCrossPiece (crossPiece1, crossPiece2, crossColor) {
@@ -233,7 +233,7 @@ function crossPieceIsOnRightOfOtherCrossPiece (crossPiece1, crossPiece2, crossCo
 }
 
 function getPiecesInCross (crossEdgePieces, crossColor) {
-    return crossEdgePieces.filter(piece => piece.getTileWithColor(crossColor).getFace().getId() == crossColor)
+    return crossEdgePieces.filter(piece => piece.getTileWithColor(crossColor).getFace().getId() === crossColor)
 }
 
 function crossIsSolved (cube, crossColor) {
