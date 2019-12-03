@@ -55,10 +55,10 @@ export class Tile {
     }
 
     getPositionOnFace (): number {
-        const cube = this.parent.parent
+        // const cube = this.parent.parent
         const piece = this.getParentPiece()
 
-        const surroundingFaces = COLORS.filter(color => color !== this.face.getId() && color !== getOppositeColor(this.face.getId())).map(id => cube.getFaceById(id))
+        // const surroundingFaces = COLORS.filter(color => color !== this.face.getId() && color !== getOppositeColor(this.face.getId())).map(id => cube.getFaceById(id))
 
         const otherTilesOnPiece = this.getOtherTilesOnPiece()
         const otherFacesOnPiece = otherTilesOnPiece.map(tile => tile.face.id)
@@ -235,7 +235,7 @@ export class Face {
         }
         const tilesOnFace = this.getTiles()
         for (const tile of tilesOnFace) {
-            const piece = tile.getParentPiece()
+            // const piece = tile.getParentPiece()
             const otherTilesOnPiece = tile.getOtherTilesOnPiece()
             /*console.log('Tile face:', tile.getFace().id);
             console.log('Tile color:', tile.getColor());
