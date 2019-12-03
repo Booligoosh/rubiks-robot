@@ -1,6 +1,6 @@
 import { WHITE, YELLOW, RED, ORANGE, BLUE, GREEN, COLORS, CLOCKWISE, COUNTER_CLOCKWISE, FACE_COUNT, PIECES_PER_FACE, CORNER_PIECE, EDGE_PIECE, CENTER_PIECE, SCRAMBLE_TEST_SET_1, SCRAMBLE_TEST_SET_2, SCRAMBLE_TEST_SET_3, SCRAMBLE_TEST_SET_4, SCRAMBLE_TEST_SET_5 } from './modules/constants'
 import {Cube, Piece, Tile} from './modules/cube-objects'
-import {getOppositeColor, getNameForColor} from './modules/color-functions'
+import {getOppositeColor} from './modules/color-functions'
 import {getScrambleSets} from './modules/scramble-sets'
 import chalk from 'chalk'
 
@@ -105,7 +105,7 @@ function solveCross (cube: Cube, crossColor: number): void {
     crossEdgePieces = crossEdgePieces.sort((piece1, piece2) => Number(piece2.getTileWithColor(crossColor).getFace().getId() === crossColor) - Number(piece1.getTileWithColor(crossColor).getFace().getId() === crossColor))
     console.log(crossEdgePieces.map(piece => piece.getTileWithoutColor(crossColor).getColor()))
 
-    const piecesAlreadyInCross = crossEdgePieces.filter(piece => piece.getTileWithColor(crossColor).getFace().getId() === crossColor)
+    // const piecesAlreadyInCross = crossEdgePieces.filter(piece => piece.getTileWithColor(crossColor).getFace().getId() === crossColor)
 
     let piecesOfficiallyInCross = getPiecesInCross(crossEdgePieces, crossColor)
     console.log(piecesOfficiallyInCross.map(piece => piece.getTileWithoutColor(crossColor).getColor()))
