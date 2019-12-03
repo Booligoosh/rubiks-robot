@@ -1,4 +1,4 @@
-{
+export default {
     "parser": "@typescript-eslint/parser",
     "env": {
         "node": true
@@ -35,6 +35,6 @@
         "no-magic-numbers": "warn",
         "no-script-url": "error",
         "eqeqeq": "error",
-        "no-unused-vars": "warn"
+        "no-unused-vars": "off"
     }
 }
