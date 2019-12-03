@@ -187,7 +187,7 @@ export class Face {
 
     constructor (parent: Cube, id: number) {
         // The ID is the same as the color number of its center piece
-        this.id = Number(id)
+        this.id = id
         this.parent = parent
     }
 
@@ -349,7 +349,7 @@ export class Cube {
     }
 
     getFaceById (id: number): Face {
-        return this.faces[this.faces.map(face => face.getId()).indexOf(Number(id))]
+        return this.faces[this.faces.map(face => face.getId()).indexOf(id)]
     }
 
     // getPieceWithFaces (): Piece {
@@ -411,7 +411,6 @@ export class Cube {
         const originalLength = turnHistory.length
         const newTurnHistory = []
         for (let index = 0; index < turnHistory.length; null) {
-            index = Number(index)
             const turn = turnHistory[index]
             let finalDirection = 0
             let movesSimplified = 0

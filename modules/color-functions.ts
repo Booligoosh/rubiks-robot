@@ -20,7 +20,6 @@ export function getNameForColor (color: number): string {
 }
 
 export function getTerminalColorFunction (color: number): Function {
-    color = Number(color)
     switch (color) {
     case WHITE: return chalk.keyword(`white`)
     case YELLOW: return chalk.keyword(`yellow`)
@@ -33,7 +32,6 @@ export function getTerminalColorFunction (color: number): Function {
 }
 
 export function getLetterForColor (color: number): string {
-    color = Number(color)
     switch (color) {
     case WHITE: return `W`
     case YELLOW: return `Y`
