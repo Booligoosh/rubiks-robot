@@ -1,7 +1,7 @@
 {
     "scripts": {
         "start": "./node_modules/ts-node/dist/bin.js -r esm solve.ts",
-        "detect": "node -r esm cube-detection.js"
+        "detect": "./node_modules/ts-node/dist/bin.js -r esm cube-detection.ts"
     },
     "dependencies": {
         "chalk": "^2.4.2",
