@@ -128,10 +128,14 @@ export class Cube {
         return table[topFaceId][letter];
     }
     
-    scramble () {
+    scrambleRandomly () {
         // Scramble 3 from worldcubeassociation.org/regulations/history/files/scrambles/scramble_cube.htm
+        this.executeScrambleFromString(`D2 F' D F L B2 L R2 D' U F R F U' L' B L2 F2 L' B F2 D U2 F2 L' U2 B' F L R'`);
+    }
+
+    executeScrambleFromString (scrambleString) {
         this.recordingTurnHistory = false;
-        this.executeAlgorithmFromString(`D2 F' D F L B2 L R2 D' U F R F U' L' B L2 F2 L' B F2 D U2 F2 L' U2 B' F L R'`);
+        this.executeAlgorithmFromString(scrambleString);
         this.recordingTurnHistory = true;
     }
     
@@ -140,7 +144,54 @@ export class Cube {
     }
     
     getTurnHistoryAsString () {
-        return this.getTurnHistory().map(turn => ['U','F','R','D','B','L'][turn.face.getId()] + (turn.direction == COUNTER_CLOCKWISE ? `'` : ``)).join(' ');
+        return this.getTurnHistory().map(turn => ['U','F','R','D','B','L'][turn.getFace().getId()] + (turn.getDirection() == COUNTER_CLOCKWISE ? `'` : ``)).join(' ');
+    }
+
+    simplifyTurnHistory (silent = true) {
+        let turnHistory = this.getTurnHistory();
+        let originalLength = turnHistory.length;
+        let newTurnHistory = [];
+        for (let index = 0; index < turnHistory.length; null) {
+            index = Number(index);
+            let turn = turnHistory[index];
+            let finalDirection = 0;
+            let movesSimplified = 0;
+
+            for (let i = 0; index + i < turnHistory.length && turnHistory[index + i].getFace() === turn.getFace(); i++) {
+                finalDirection += turnHistory[index + i].getDirection();
+                movesSimplified++;
+            }
+            // console.log('---')
+            // console.log(turnHistory.map(turn => ['U','F','R','D','B','L'][turn.getFace().getId()]).join())
+            // console.log(newTurnHistory.map(turn => ['U','F','R','D','B','L'][turn.getFace().getId()]).join())
+            // console.log(index, ['U','F','R','D','B','L'][turn.getFace().getId()], movesSimplified, finalDirection, turnHistory.slice(index, index + 3).map(turn => ['U','F','R','D','B','L'][turn.getFace().getId()]), ['U','F','R','D','B','L'][turn.getFace().getId()]);
+
+            finalDirection = finalDirection % 4;
+            if (finalDirection > 2) {
+                finalDirection -= 4;
+            } else if (finalDirection < -2) {
+                finalDirection += 4;
+            }
+
+            // console.log(index, movesSimplified, finalDirection);
+
+            if (finalDirection === 0) {
+                // Do nothing
+            } else if (finalDirection === 2 || finalDirection === -2) {
+                newTurnHistory.push(new Turn(turn.getFace(), finalDirection/2))
+                newTurnHistory.push(new Turn(turn.getFace(), finalDirection/2))
+            } else {
+                newTurnHistory.push(new Turn(turn.getFace(), finalDirection))
+            }
+
+            index += movesSimplified;
+        }
+
+        this.turnHistory = newTurnHistory;
+
+        if (!silent) {
+            console.log(`Removed ${originalLength - turnHistory.length} moves by simplification.`);
+        }
     }
 }
 
@@ -187,7 +238,7 @@ export class Face {
     turn (direction) {
         
         if(this.parent.recordingTurnHistory) {
-            this.parent.turnHistory.push({face: this, direction: direction});
+            this.parent.turnHistory.push(new Turn(this, direction));
         }
         
         if(isOddColor(this.id)) {
@@ -236,6 +287,18 @@ export class Piece {
     
     hasColor (color) {
         return this.getTiles().filter(tile => tile.getColor() == color).length > 0;
+    }
+
+    getTileWithColor (color) {
+        if (this.hasColor(color)) {
+            return this.getTiles().filter(tile => tile.getColor() === color)[0];
+        }
+    }
+
+    getTileWithoutColor (color) {
+        if (this.hasColor(color)) {
+            return this.getTiles().filter(tile => tile.getColor() !== color)[0];
+        }
     }
 }
 
@@ -355,5 +418,20 @@ export class Tile {
                 }
             }
         }
+    }
+}
+
+class Turn {
+    constructor (face, direction) {
+        this.face = face;
+        this.direction = direction;
+    }
+
+    getFace () {
+        return this.face;
+    }
+
+    getDirection () {
+        return this.direction;
     }
 }

@@ -6,8 +6,8 @@ export const BLUE = 4;
 export const ORANGE = 5;
 export const COLORS = [WHITE, GREEN, RED, YELLOW, BLUE, ORANGE];
 
-export const CLOCKWISE = 0;
-export const COUNTER_CLOCKWISE = 1;
+export const CLOCKWISE = 1;
+export const COUNTER_CLOCKWISE = -1;
 
 export const FACE_COUNT = 6;
 export const PIECES_PER_FACE = 9;
