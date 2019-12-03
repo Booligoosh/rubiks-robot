@@ -4,7 +4,7 @@ import {getOppositeColor, incrementColor, isOddColor} from './color-functions.js
 
 import {removeDuplicates, removeDuplicateArrays} from './array-functions.js';
 
-const chalk = require('chalk');
+import chalk from 'chalk';
 
 export class Cube {
     constructor () {

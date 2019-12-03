@@ -1,6 +1,6 @@
 import {WHITE, YELLOW, RED, ORANGE, BLUE, GREEN} from './constants.js';
 
-const chalk = require('chalk');
+import chalk from 'chalk';
 
 function getTerminalColorFunction (color) {
     if (color == WHITE) {
