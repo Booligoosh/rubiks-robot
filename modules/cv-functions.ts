@@ -1,7 +1,7 @@
 import {WHITE, GREEN, RED, YELLOW, BLUE, ORANGE, COLORS} from './constants'
 import * as cv from 'opencv4nodejs'
 
-export function getMaskRangesForColor (color) {
+export function getMaskRangesForColor (color: number): Range[] {
     const table = {}
     table[WHITE] = [
         {
@@ -47,11 +47,11 @@ export function getMaskRangesForColor (color) {
     return table[color]
 }
 
-export function getImageMaskForRange (image, lower, upper) {
-    return image.inRange(new cv.Vec3(...lower), new cv.Vec3(...upper))
+export function getImageMaskForRange (image, lower: number[], upper: number[]) {
+    return image.inRange(new cv.Vec3(lower[0], lower[1], lower[2]), new cv.Vec3(upper[0], upper[1], upper[2]))
 }
 
-export function getImageMaskForRanges (image, ranges) {
+export function getImageMaskForRanges (image, ranges: Range[]) {
     // Ranges looks like this: [ { lower: [1,2,3], upper: [1,2,3] } ]
     let mask = null
     for (const range of ranges) {
@@ -65,7 +65,7 @@ export function getImageMaskForRanges (image, ranges) {
     return mask
 }
 
-export function getImageMaskForColor (image, color) {
+export function getImageMaskForColor (image, color: number) {
     return getImageMaskForRanges(image, getMaskRangesForColor(color))
 }
 
@@ -75,4 +75,9 @@ export function multiChannelApplyMask (img, mask) {
     const output = new cv.Mat(maskedChannels)
 
     return output
+}
+
+interface Range {
+    lower: number[];
+    upper: number[];
 }
