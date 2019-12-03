@@ -8,6 +8,7 @@ export const COLORS: number[] = [WHITE, GREEN, RED, YELLOW, BLUE, ORANGE]
 
 export const CLOCKWISE = 1
 export const COUNTER_CLOCKWISE = -1
+export const DOUBLE = 2
 
 export const FACE_COUNT = 6
 export const PIECES_PER_FACE = 9
