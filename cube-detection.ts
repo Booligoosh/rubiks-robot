@@ -1,10 +1,10 @@
-import {WHITE, GREEN, RED, YELLOW, BLUE, ORANGE, COLORS} from './modules/constants'
+import {COLORS} from './modules/constants'
 import {getNameForColor} from './modules/color-functions'
 import {getMaskRangesForColor, getImageMaskForColor} from './modules/cv-functions'
-import sleep from './modules/sleep'
+// import sleep from './modules/sleep'
 import * as cv from 'opencv4nodejs'
 
-async function readCube () {
+async function readCube (): Promise<void> {
 
     // Webcamera no 0 is used to capture the frames 
     //let cap = new cv.VideoCapture(0);
