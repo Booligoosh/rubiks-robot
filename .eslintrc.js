@@ -34,6 +34,14 @@ module.exports = {
         ],
         "no-script-url": "error",
         "eqeqeq": "error",
-        "no-unused-vars": "off"
+        "no-unused-vars": "off",
+        "@typescript-eslint/member-delimiter-style": [
+            "error",
+            {
+                "multiline": {
+                    "delimiter": "none"
+                }
+            }
+        ]
     }
 }

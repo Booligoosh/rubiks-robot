@@ -483,6 +483,6 @@ export class Cube {
 }
 
 interface PreTile {
-    color: number;
-    face: Face;
+    color: number
+    face: Face
 }

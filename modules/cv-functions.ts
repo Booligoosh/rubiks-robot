@@ -78,6 +78,6 @@ export function multiChannelApplyMask (img: cv.Mat, mask): cv.Mat {
 }
 
 interface Range {
-    lower: number[];
-    upper: number[];
+    lower: number[]
+    upper: number[]
 }
