@@ -452,6 +452,13 @@ export class Cube {
         }
     }
 
+    getEfficiencyScoreFromTurnHistory (): number {
+        // Most efficient: 1x90deg or 2x90deg where the faces are opposite
+        // Second most efficient: 1x180deg or 2x180deg where the faces are opposite
+        // Third most efficient: 2x90deg where the faces aren't opposite
+        return 0
+    }
+
     print (useLetters = false): void {
         const divider = `\n-------------`
         let toPrint = ``
