@@ -7,10 +7,15 @@ import { removeDuplicates, removeDuplicateArrays } from './array-functions';
 import chalk from 'chalk';
 
 export class Cube {
+    faces: Face[]
+    pieces: Piece[]
+    recordingTurnHistory: Boolean
+    turnHistory: Turn[]
+
     constructor () {
         this.faces = [];
         this.pieces = [];
-        for(let i in COLORS) {
+        for(let i of COLORS) {
             this.faces.push(new Face(this, i));
             
             this.pieces.push(new CenterPiece(this, [{
@@ -89,7 +94,7 @@ export class Cube {
         return this.faces;
     }
     
-    getFaceById (id) {
+    getFaceById (id: number) {
         return this.faces[this.faces.map(face => face.getId()).indexOf(Number(id))];
     }
     
@@ -97,7 +102,7 @@ export class Cube {
         
     }
     
-    executeAlgorithmFromString (alg) {
+    executeAlgorithmFromString (alg: string) {
         // TODO: M/E/S moves
         // TODO: X/Y/Z moves
         // TODO: Change faceId based on orientation
@@ -113,7 +118,7 @@ export class Cube {
         }
     }
     
-    getFaceIdFromLetter (letter, topFaceId) {
+    getFaceIdFromLetter (letter: string, topFaceId: number) {
         // TODO: Add letter => id maps all orientations 
         let table = {
             0: {
@@ -133,7 +138,7 @@ export class Cube {
         this.executeScrambleFromString(`D2 F' D F L B2 L R2 D' U F R F U' L' B L2 F2 L' B F2 D U2 F2 L' U2 B' F L R'`);
     }
 
-    executeScrambleFromString (scrambleString) {
+    executeScrambleFromString (scrambleString: string) {
         this.recordingTurnHistory = false;
         this.executeAlgorithmFromString(scrambleString);
         this.recordingTurnHistory = true;
@@ -194,7 +199,7 @@ export class Cube {
         }
     }
 
-    print (useLetters = false) {
+    print (useLetters: boolean = false) {
         const divider = `\n-------------`;
         let toPrint = ``;
 
@@ -222,7 +227,10 @@ export class Cube {
 }
 
 export class Face {
-    constructor (parent, id) {
+    id: number
+    parent: Cube
+
+    constructor (parent: Cube, id: number) {
         // The ID is the same as the color number of its center piece
         this.id = Number(id);
         this.parent = parent;
@@ -255,13 +263,13 @@ export class Face {
         return this.parent.faces[getOppositeColor(this.id)];
     }
     
-    getTileAtPosition(position) {
+    getTileAtPosition(position: number) {
         let tiles = this.getTiles();
-        let toReturn = tiles[tiles.map(tile => tile.getPositionOnFace()).indexOf(position)];
+        let toReturn = tiles.find(tile => tile.getPositionOnFace() === position);
         return typeof toReturn == 'undefined' ? null : toReturn;
     }
     
-    turn (direction) {
+    turn (direction: number) {
         
         if(this.parent.recordingTurnHistory) {
             this.parent.turnHistory.push(new Turn(this, direction));
@@ -298,7 +306,11 @@ export class Face {
 }
 
 export class Piece {
-    constructor (parent, tiles) {
+    parent: Cube
+    tiles: Tile[]
+    type: number
+
+    constructor (parent: Cube, tiles: PreTile[]) {
         this.parent = parent;
         this.tiles = tiles.map(tile => new Tile(this, tile.color, tile.face));
     }
@@ -311,17 +323,17 @@ export class Piece {
         return this.type;
     }
     
-    hasColor (color) {
+    hasColor (color: number) {
         return this.getTiles().filter(tile => tile.getColor() == color).length > 0;
     }
 
-    getTileWithColor (color) {
+    getTileWithColor (color: number) {
         if (this.hasColor(color)) {
             return this.getTiles().filter(tile => tile.getColor() === color)[0];
         }
     }
 
-    getTileWithoutColor (color) {
+    getTileWithoutColor (color: number) {
         if (this.hasColor(color)) {
             return this.getTiles().filter(tile => tile.getColor() !== color)[0];
         }
@@ -329,7 +341,7 @@ export class Piece {
 }
 
 export class CornerPiece extends Piece {
-    constructor (parent, tiles) {
+    constructor(parent: Cube, tiles: PreTile[]) {
         super(parent, tiles);
         this.type = CORNER_PIECE;
         if(this.tiles.length != 3) {
@@ -339,7 +351,7 @@ export class CornerPiece extends Piece {
 }
 
 export class EdgePiece extends Piece {
-    constructor (parent, tiles) {
+    constructor(parent: Cube, tiles: PreTile[]) {
         super(parent, tiles);
         this.type = EDGE_PIECE;
         if(this.tiles.length != 2) {
@@ -349,7 +361,7 @@ export class EdgePiece extends Piece {
 }
 
 export class CenterPiece extends Piece {
-    constructor (parent, tiles) {
+    constructor(parent: Cube, tiles: PreTile[]) {
         super(parent, tiles);
         this.type = CENTER_PIECE;
         if(this.tiles.length != 1) {
@@ -359,7 +371,11 @@ export class CenterPiece extends Piece {
 }
 
 export class Tile {
-    constructor (parent, color, face) {
+    parent: Piece
+    color: number
+    face: Face
+
+    constructor (parent: Piece, color: number, face: Face) {
         this.parent = parent;
         this.color = color;
         this.face = face;
@@ -373,7 +389,7 @@ export class Tile {
         return this.face;
     }
     
-    setFace (face) {
+    setFace (face: Face) {
         this.face = face;
     }
     
@@ -448,7 +464,10 @@ export class Tile {
 }
 
 class Turn {
-    constructor (face, direction) {
+    face: Face
+    direction: number
+
+    constructor (face: Face, direction: number) {
         this.face = face;
         this.direction = direction;
     }
@@ -460,4 +479,9 @@ class Turn {
     getDirection () {
         return this.direction;
     }
+}
+
+interface PreTile {
+    color: number
+    face: Face
 }

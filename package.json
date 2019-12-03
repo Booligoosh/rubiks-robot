@@ -1,11 +1,15 @@
 {
     "scripts": {
-        "start": "node -r esm solve.js",
+        "start": "./node_modules/ts-node/dist/bin.js -r esm solve.ts",
         "detect": "node -r esm cube-detection.js"
     },
     "dependencies": {
         "chalk": "^2.4.2",
-        "esm": "^3.2.22",
         "opencv4nodejs": "^4.14.1"
+    },
+    "devDependencies": {
+        "esm": "^3.2.25",
+        "ts-node": "^8.5.4",
+        "typescript": "^3.7.2"
     }
 }
