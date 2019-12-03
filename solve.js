@@ -1,7 +1,7 @@
-import {WHITE, YELLOW, RED, ORANGE, BLUE, GREEN, COLORS, CLOCKWISE, COUNTER_CLOCKWISE, FACE_COUNT, PIECES_PER_FACE, CORNER_PIECE, EDGE_PIECE, CENTER_PIECE} from './modules/constants.js';
-import {Cube} from './modules/cube-objects.js';
-import {getOppositeColor, getNameForColor} from './modules/color-functions.js';
-
+import {WHITE, YELLOW, RED, ORANGE, BLUE, GREEN, COLORS, CLOCKWISE, COUNTER_CLOCKWISE, FACE_COUNT, PIECES_PER_FACE, CORNER_PIECE, EDGE_PIECE, CENTER_PIECE} from './modules/constants.js';'
+import {Cube} from './modules/cube-objects';
+import {getOppositeColor, getNameForColor} from './modules/color-functions';
+'
 let cube = new Cube();
         
 console.log('Number of pieces:', cube.getPieces().length);

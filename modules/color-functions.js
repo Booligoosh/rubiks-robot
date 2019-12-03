@@ -1,4 +1,4 @@
-import { FACE_COUNT, WHITE, YELLOW, RED, ORANGE, BLUE, GREEN } from './constants.js';
+import { FACE_COUNT, WHITE, YELLOW, RED, ORANGE, BLUE, GREEN } from './constants';
 
 import chalk from 'chalk';
 

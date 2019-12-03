@@ -1,7 +1,7 @@
-import {WHITE, GREEN, RED, YELLOW, BLUE, ORANGE, COLORS} from './modules/constants.js';
-import {getNameForColor} from './modules/color-functions.js';
-import {getMaskRangesForColor, getImageMaskForColor} from './modules/cv-functions.js';
-import sleep from './modules/sleep.js';
+import {WHITE, GREEN, RED, YELLOW, BLUE, ORANGE, COLORS} from './modules/constants';
+import {getNameForColor} from './modules/color-functions';
+import {getMaskRangesForColor, getImageMaskForColor} from './modules/cv-functions';
+import sleep from './modules/sleep';
 import * as cv from 'opencv4nodejs';
 
 readCube();

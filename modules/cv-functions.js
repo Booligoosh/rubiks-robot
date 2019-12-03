@@ -1,4 +1,4 @@
-import {WHITE, GREEN, RED, YELLOW, BLUE, ORANGE, COLORS} from './constants.js';
+import {WHITE, GREEN, RED, YELLOW, BLUE, ORANGE, COLORS} from './constants';
 import * as cv from 'opencv4nodejs';
 
 export function getImageMaskForColor(image, color) {
