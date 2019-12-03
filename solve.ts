@@ -226,10 +226,10 @@ for (const scrambleString of scrambles){
     const correct = crossIsSolved(cube, color)
     //cube.print();
     cube.simplifyTurnHistory()
+    console.log(`Final cross solution had ${cube.getTurnHistory().length} turns: ${cube.getTurnHistoryAsString()}`)
     if (!correct) {
         console.log(`scrambleString`, scrambleString)
         cube.print()
-        console.log(`Final cross solution had ${cube.getTurnHistory().length} turns: ${cube.getTurnHistoryAsString()}`)
         console.log((correct ? chalk.green : chalk.red)(`crossIsSolved: ${correct}`))
     }
         
