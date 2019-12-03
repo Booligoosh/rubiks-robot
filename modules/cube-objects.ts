@@ -459,8 +459,10 @@ export class Cube {
         return 0
     }
 
-    print (useLetters = false): void {
-        const divider = `\n-------------`
+    print (useLetters = true): void {
+        const topDivider =    `\n┌───┬───┬───┐`
+        const middleDivider = `\n├───┼───┼───┤`
+        const bottomDivider = `\n└───┴───┴───┘`
         let toPrint = ``
 
         for (const face of this.getFaces()) {
@@ -469,17 +471,21 @@ export class Cube {
 
             for (let i = 0; i < tiles.length; i++) {
                 const tile = tiles[i]
-                if (i === 0 || i === 3 || i === 6) {
-                    toPrint += divider
-                    toPrint += `\n|`
+                if (i === 0) {
+                    toPrint += topDivider
+                    toPrint += `\n│`
+                }
+                if (i === 3 || i === 6) {
+                    toPrint += middleDivider
+                    toPrint += `\n│`
                 }
                 if (tile) {
                     toPrint += ` ${getTerminalColorFunction(tile.color)(useLetters ? getLetterForColor(tile.color) : tile.color)} |`
                 } else {
-                    toPrint += `   |`
+                    toPrint += `   │`
                 }
                 if (i === 8) {
-                    toPrint += divider
+                    toPrint += bottomDivider
                 }
             }
         }
