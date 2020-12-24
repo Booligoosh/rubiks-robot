@@ -1,4 +1,4 @@
-import {COLORS, CLOCKWISE, COUNTER_CLOCKWISE, CORNER_PIECE, EDGE_PIECE, CENTER_PIECE} from './constants'
+import {COLORS, CLOCKWISE, COUNTER_CLOCKWISE, CORNER_PIECE, EDGE_PIECE, CENTER_PIECE, DOUBLE} from './constants'
 
 import { getOppositeColor, incrementColor, isOddColor, getLetterForColor, getTerminalColorFunction } from './color-functions'
 
@@ -403,7 +403,7 @@ export class Cube {
     }
 
     getTurnHistoryAsString (): string {
-        return this.getTurnHistory().map(turn => [`U`, `F`, `R`, `D`, `B`, `L`][turn.getFace().getId()] + (turn.getDirection() === COUNTER_CLOCKWISE ? `'` : ``)).join(` `)
+        return this.getTurnHistory().map(turn => [`U`, `F`, `R`, `D`, `B`, `L`][turn.getFace().getId()] + (turn.getDirection() === DOUBLE ? `2` : (turn.getDirection() === COUNTER_CLOCKWISE ? `'` : ``))).join(` `)
     }
 
     simplifyTurnHistory (silent = true): void {
@@ -436,8 +436,7 @@ export class Cube {
             if (finalDirection === 0) {
                 // Do nothing
             } else if (finalDirection === 2 || finalDirection === -2) {
-                newTurnHistory.push(new Turn(turn.getFace(), finalDirection / 2))
-                newTurnHistory.push(new Turn(turn.getFace(), finalDirection / 2))
+                newTurnHistory.push(new Turn(turn.getFace(), Math.abs(finalDirection)))
             } else {
                 newTurnHistory.push(new Turn(turn.getFace(), finalDirection))
             }
